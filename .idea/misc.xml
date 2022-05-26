@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/drawable/ic_drop_down.xml" value="0.12222222222222222" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/drawable/ic_storage.xml" value="0.21481481481481482" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/drawable/shape.xml" value="0.17777777777777778" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/activity_list_book.xml" value="0.1752786220871327" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/activity_update_data.xml" value="0.20729166666666668" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/custom_chart_statisticals.xml" value="0.1" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/customlistview_returnbook.xml" value="0.22" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/dialog_kesach.xml" value="0.23550724637681159" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/dialog_search_muontra.xml" value="0.33" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/dialog_sua_ke.xml" value="0.23550724637681159" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/dialog_sua_sach.xml" value="0.17502532928064843" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/dialog_sua_xoa_ke.xml" value="0.25" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/dialog_sua_xoa_sach.xml" value="0.23550724637681159" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/dialog_themsach.xml" value="0.22" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/dialog_update.xml" value="0.2" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/dialog_update_infor.xml" value="0.1" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/forgotpassword.xml" value="0.17603850050658562" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/fragment_about.xml" value="0.12" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/fragment_bookstore.xml" value="0.15" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/fragment_borrow.xml" value="0.22" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/fragment_history_borrow.xml" value="0.18" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/fragment_home.xml" value="0.18" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/fragment_logout.xml" value="0.11481481481481481" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/fragment_return.xml" value="0.21" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/fragment_statisticals.xml" value="0.17" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/item_kesach.xml" value="0.33" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/item_listbook.xml" value="0.1" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/item_sach.xml" value="0.22" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/item_selected.xml" value="0.1" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/layout_header_nav.xml" value="0.18" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/list_book.xml" value="0.16" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/loginactivity.xml" value="0.22" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/menu_home.xml" value="0.11481481481481481" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/layout/update_infor.xml" value="0.2" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/menu/menu_home.xml" value="0.14" />
+        <entry key="..\:/Users/TrungKienPC/AndroidStudioProjects/ICTULib/app/src/main/res/menu/menu_nav.xml" value="0.1" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

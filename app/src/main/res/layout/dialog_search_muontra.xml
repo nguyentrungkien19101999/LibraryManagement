@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_marginStart="15dp"
+        android:textColor="@color/black"
+        android:text="Nhập từ khóa tìm kiếm"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/edt_search"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="Tên sv, mã sv, mã sách, ngày mượn"
+        android:layout_below="@+id/tv1"
+        android:gravity="center"
+        android:textSize="15sp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_huy"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="15dp"
+        android:backgroundTint="@color/white"
+        android:textColor="#B3B3B3"
+        android:layout_below="@+id/edt_search"
+        android:text="Hủy"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_search"
+        android:layout_toRightOf="@+id/btn_huy"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="15dp"
+        android:backgroundTint="@color/white"
+        android:textColor="#00BCD4"
+        android:layout_below="@+id/edt_search"
+        android:text="Đồng ý"
+        />
+
+</RelativeLayout>

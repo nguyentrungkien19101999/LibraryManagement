@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:gravity="center"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:src="@drawable/logo1" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="#f000"
+        android:layout_marginTop="10dp"
+        android:textAlignment="gravity"
+        android:gravity="center"
+        android:text="Ứng dụng là một công cụ hữu ích với chức năng quản lý thư viện cộng đồng nhỏ và vừa."
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sinh viên thực hiện: Nguyễn Trung Kiên"
+        android:layout_marginTop="140dp"
+        android:textSize="21sp"
+        android:textColor="#03A9F4"
+        android:textStyle="italic"/>
+</LinearLayout>
