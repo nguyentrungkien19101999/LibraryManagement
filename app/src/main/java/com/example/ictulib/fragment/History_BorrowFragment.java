@@ -28,6 +28,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.ictulib.BookHelper;
 import com.example.ictulib.R;
+import com.example.ictulib.adapter.Adapter_SachMuon;
+import com.example.ictulib.model.Books;
 import com.example.ictulib.my_interface.IClickitemMuonSach;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -451,5 +453,4 @@ public class History_BorrowFragment extends Fragment implements SwipeRefreshLayo
             }
         }, 1200);
     }
-
 }

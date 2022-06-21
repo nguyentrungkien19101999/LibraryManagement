@@ -5,12 +5,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,15 +16,14 @@ import androidx.fragment.app.Fragment;
 
 import com.example.ictulib.BookHelper;
 import com.example.ictulib.R;
-import com.example.ictulib.fragment.ListBooks;
-import com.example.ictulib.thongKeMuon;
+import com.example.ictulib.model.StatisticBorrow;
 import com.skydoves.progressview.ProgressView;
 
 import java.util.ArrayList;
 
 public class StatisticalsFragment extends Fragment {
     BookHelper bookHelper;
-    ArrayList<thongKeMuon> mangThongKe;
+    ArrayList<StatisticBorrow> mangThongKe;
     private TextView tvProgress1;
     private TextView tvProgress2;
     private TextView tvProgress3;
@@ -42,7 +39,6 @@ public class StatisticalsFragment extends Fragment {
     private TextView tv_sumMuon;
 
     private Spinner spinner;
-
 
     @Nullable
     @Override
@@ -68,7 +64,7 @@ public class StatisticalsFragment extends Fragment {
         //create database
         bookHelper = new BookHelper(getActivity(), "books.db", null, 1);
 
-        mangThongKe = new ArrayList<thongKeMuon>();
+        mangThongKe = new ArrayList<StatisticBorrow>();
 
         tinhTong();
 
@@ -76,7 +72,7 @@ public class StatisticalsFragment extends Fragment {
         while (cursor.moveToNext()){
             String thang = cursor.getString(0);
             int count = cursor.getInt(1);
-            mangThongKe.add(new thongKeMuon(thang,count));
+            mangThongKe.add(new StatisticBorrow(thang,count));
         }
 
         ArrayList<String> arrayList = new ArrayList<String>();
@@ -91,7 +87,6 @@ public class StatisticalsFragment extends Fragment {
                 int thang8 = 0;
                 int thang9 = 0;
                 int thang10 = 0;
-
                 for (int i1 = 0; i1 < mangThongKe.size(); i1++) {
                     if (mangThongKe.get(i1).getThang().compareTo("07") == 0) {
                         thang7 = mangThongKe.get(i1).getCount();

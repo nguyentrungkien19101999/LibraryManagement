@@ -11,16 +11,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ICTULib">
-        <activity android:name=".LoginActivity"
+        <activity android:name=".view.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ListBookActivity" />
-        <activity android:name=".forgotpassword" />
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".view.ListBookActivity" />
+        <activity android:name=".view.ForgotPasswordActivity" />
+        <activity android:name=".view.MainActivity"/>
     </application>
 
 </manifest>

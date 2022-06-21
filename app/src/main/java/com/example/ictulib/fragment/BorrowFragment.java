@@ -1,7 +1,6 @@
 package com.example.ictulib.fragment;
 
 import android.os.Bundle;
-import android.renderscript.Sampler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +18,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.ictulib.BookHelper;
 import com.example.ictulib.R;
+import com.example.ictulib.adapter.Adapter_ListSpinner_Borrow;
+import com.example.ictulib.model.ListBooks;
 
 
 import java.util.ArrayList;
@@ -34,7 +35,6 @@ public class BorrowFragment extends Fragment {
     private Spinner spinner_MaSach;
     private String id_sach;
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -46,7 +46,6 @@ public class BorrowFragment extends Fragment {
         date = view.findViewById(R.id.date);
         save = view.findViewById(R.id.btnsave);
         count = view.findViewById(R.id.count);
-
 
         //create database
         bookHelper = new BookHelper(getActivity(), "books.db", null, 1);
@@ -81,7 +80,6 @@ public class BorrowFragment extends Fragment {
             arrayMaSach.add(new ListBooks(masach,tensach));
         }
 
-
         adapterListBook = new Adapter_ListSpinner_Borrow(getActivity(), R.layout.fragment_borrow, arrayMaSach);
         spinner_MaSach.setAdapter(adapterListBook);
 
@@ -91,10 +89,8 @@ public class BorrowFragment extends Fragment {
                 id_sach = adapterListBook.getItem(i).getMaSach();
                  //Toast.makeText(getActivity(), id_sach+"", Toast.LENGTH_LONG).show();
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
             }
         });
 
@@ -159,7 +155,6 @@ public class BorrowFragment extends Fragment {
         }
     }
 }
-
     /*public void hideSotfkeyboard(){
         try {
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);

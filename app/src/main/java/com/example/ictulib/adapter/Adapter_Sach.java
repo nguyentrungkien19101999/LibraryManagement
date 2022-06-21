@@ -1,4 +1,4 @@
-package com.example.ictulib.fragment;
+package com.example.ictulib.adapter;
 
 
 import android.view.LayoutInflater;
@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ictulib.R;
+import com.example.ictulib.model.Sach;
 import com.example.ictulib.my_interface.IClickitemSach;
 
 import java.util.List;

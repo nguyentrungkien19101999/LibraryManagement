@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.ictulib.R;
+import com.example.ictulib.adapter.MyViewPagerAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -65,7 +66,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
         mBottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -85,8 +85,6 @@ public class HomeFragment extends Fragment {
                     case R.id.tab_storage:
                         mViewPager.setCurrentItem(3);
                         break;
-
-
                 }
                 return true;
             }

@@ -1,4 +1,4 @@
-package com.example.ictulib;
+package com.example.ictulib.view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ictulib.R;
 import com.example.ictulib.fragment_nav.AboutFragment;
 import com.example.ictulib.fragment_nav.HomeFragment;
 import com.example.ictulib.fragment_nav.StatisticalsFragment;
@@ -142,7 +143,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         tvname.setText(name);
         tvemail.setText(email);
-
     }
-
 }

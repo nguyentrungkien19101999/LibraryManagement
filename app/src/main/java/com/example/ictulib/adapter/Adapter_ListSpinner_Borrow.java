@@ -1,4 +1,4 @@
-package com.example.ictulib.fragment;
+package com.example.ictulib.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.ictulib.R;
-import com.example.ictulib.fragment.ListBooks;
+import com.example.ictulib.model.ListBooks;
 
 import java.util.List;
 

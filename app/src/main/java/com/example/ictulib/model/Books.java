@@ -1,8 +1,4 @@
-package com.example.ictulib.fragment;
-
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
-
+package com.example.ictulib.model;
 
 public class Books {
     private int id;

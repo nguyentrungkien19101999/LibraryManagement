@@ -1,10 +1,10 @@
-package com.example.ictulib;
+package com.example.ictulib.model;
 
-public class thongKeMuon {
+public class StatisticBorrow {
     private String thang;
     private int count;
 
-    public thongKeMuon(String thang, int count) {
+    public StatisticBorrow(String thang, int count) {
         this.thang = thang;
         this.count = count;
     }

@@ -31,6 +31,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.ictulib.BookHelper;
 import com.example.ictulib.R;
+import com.example.ictulib.adapter.Adapter_SachMuon;
+import com.example.ictulib.model.Books;
 import com.example.ictulib.my_interface.IClickitemMuonSach;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -103,8 +105,6 @@ public class ReturnBookFragment extends Fragment implements SwipeRefreshLayout.O
 
         bookHelper.QueryData("CREATE VIEW IF NOT EXISTS dangmuon_VIEW AS SELECT * FROM MuonSach WHERE NgayTra is NULL");
 
-
-
         ArrayList<String> arraySpinner = new ArrayList<String>();
         arraySpinner.add("Sách đang cho mượn");
         arraySpinner.add("Sách mượn quá hạn (2 tháng)");
@@ -127,10 +127,8 @@ public class ReturnBookFragment extends Fragment implements SwipeRefreshLayout.O
                         break;
                 }
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
             }
         });
 
@@ -141,7 +139,6 @@ public class ReturnBookFragment extends Fragment implements SwipeRefreshLayout.O
                 dialogSearch();
             }
         });
-
         return view;
     }
 
@@ -207,14 +204,12 @@ public class ReturnBookFragment extends Fragment implements SwipeRefreshLayout.O
                 }
             }
         });
-
         btnHuy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
             }
         });
-
         dialog.show();
     }
 
@@ -282,7 +277,6 @@ public class ReturnBookFragment extends Fragment implements SwipeRefreshLayout.O
                         bookHelper.QueryData("UPDATE Sach SET SoLuong ="+soluong+" WHERE MaSach ='"+strMaSach+"'");
                         select1();
                         dialog.dismiss();
-
                     }
                 });
                 delete.setNegativeButton("Không", new DialogInterface.OnClickListener() {
@@ -325,7 +319,6 @@ public class ReturnBookFragment extends Fragment implements SwipeRefreshLayout.O
         } else if (TextUtils.isEmpty(strmuon)) {
             Toast.makeText(getActivity(), "Vui lòng thêm ngày mượn!", Toast.LENGTH_LONG).show();
         } else {
-
             //Thay doi du lieu khi chua tra sach
             if (TextUtils.isEmpty(strtra)) {
                 Cursor maSach = bookHelper.GetData("SELECT MaSach FROM MuonSach WHERE Id ='"+id+"'");
@@ -513,5 +506,4 @@ public class ReturnBookFragment extends Fragment implements SwipeRefreshLayout.O
             }
         }, 1200);
     }
-
 }

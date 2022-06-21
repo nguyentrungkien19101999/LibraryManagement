@@ -1,4 +1,4 @@
-package com.example.ictulib;
+package com.example.ictulib.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -7,7 +7,10 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-public class forgotpassword extends AppCompatActivity {
+
+import com.example.ictulib.R;
+
+public class ForgotPasswordActivity extends AppCompatActivity {
     TextView text11, text22;
     Button back;
     @Override
@@ -20,7 +23,7 @@ public class forgotpassword extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(forgotpassword.this, LoginActivity.class);
+                Intent intent = new Intent(ForgotPasswordActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
         });

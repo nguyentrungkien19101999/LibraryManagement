@@ -1,4 +1,4 @@
-package com.example.ictulib.fragment;
+package com.example.ictulib.model;
 
 public class Sach {
    private String id;

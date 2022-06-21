@@ -25,13 +25,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.ictulib.BookHelper;
-import com.example.ictulib.ListBookActivity;
+import com.example.ictulib.view.ListBookActivity;
 import com.example.ictulib.R;
+import com.example.ictulib.adapter.Adapter_Storage;
+import com.example.ictulib.model.Storage;
 import com.example.ictulib.my_interface.IClickitemKeSach;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-
 
 public class BookstoreFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     BookHelper bookHelper;
@@ -41,8 +42,6 @@ public class BookstoreFragment extends Fragment implements SwipeRefreshLayout.On
     private RecyclerView rcvStorage;
     private Adapter_Storage mAdapterStorage;
     private SwipeRefreshLayout swipeRefreshLayout;
-
-
 
     @Nullable
     @Override
@@ -118,9 +117,7 @@ public class BookstoreFragment extends Fragment implements SwipeRefreshLayout.On
                     Toast.makeText(getActivity(), "Thêm kệ sách thành công", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                     select();
-
                 }
-
             }
         });
 
@@ -130,7 +127,6 @@ public class BookstoreFragment extends Fragment implements SwipeRefreshLayout.On
                 dialog.dismiss();
             }
         });
-
         dialog.show();
     }
 
@@ -179,9 +175,7 @@ public class BookstoreFragment extends Fragment implements SwipeRefreshLayout.On
                 dialog.dismiss();
             }
         });
-
         dialog.show();
-
     }
 
     //Dialog Sua Ten Ke
@@ -201,15 +195,14 @@ public class BookstoreFragment extends Fragment implements SwipeRefreshLayout.On
             @Override
             public void onClick(View view) {
                 String tenKe = edtTenKe.getText().toString().trim();
-                if (TextUtils.isEmpty(tenKe)){
+                if (TextUtils.isEmpty(tenKe)) {
                     Toast.makeText(getActivity(), "Vui lòng nhập tên kệ sách!", Toast.LENGTH_SHORT).show();
-                }else {
-                    bookHelper.QueryData("UPDATE KeSach SET TenKe = '"+tenKe+"' WHERE MaKe = "+id);
+                } else {
+                    bookHelper.QueryData("UPDATE KeSach SET TenKe = '" + tenKe + "' WHERE MaKe = " + id);
                     Toast.makeText(getActivity(), "Sửa tên kệ sách thành công", Toast.LENGTH_SHORT).show();
                     select();
                     dialog.dismiss();
                 }
-
             }
         });
 
@@ -219,9 +212,7 @@ public class BookstoreFragment extends Fragment implements SwipeRefreshLayout.On
                 dialog.dismiss();
             }
         });
-
         dialog.show();
-
     }
 
     //Select KeSach
@@ -259,5 +250,4 @@ public class BookstoreFragment extends Fragment implements SwipeRefreshLayout.On
             }
         }, 2500);
     }
-
 }

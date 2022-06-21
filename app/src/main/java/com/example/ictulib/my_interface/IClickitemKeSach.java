@@ -1,7 +1,7 @@
 package com.example.ictulib.my_interface;
 
 
-import com.example.ictulib.fragment.Storage;
+import com.example.ictulib.model.Storage;
 
 public interface IClickitemKeSach {
 

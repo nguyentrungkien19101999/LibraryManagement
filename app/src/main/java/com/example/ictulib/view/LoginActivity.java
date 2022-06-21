@@ -1,4 +1,4 @@
-package com.example.ictulib;
+package com.example.ictulib.view;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,13 +11,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ictulib.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 public class LoginActivity extends AppCompatActivity {
-    Intent intent;
     TextInputEditText account;
     Button btnlogin;
     TextView forgotpassword;
@@ -32,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
         forgotpassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, forgotpassword.class);
+                Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
                 startActivity(intent);
             }
         });
@@ -43,7 +43,6 @@ public class LoginActivity extends AppCompatActivity {
                 login();
             }
         });
-
     }
 
     private void login() {

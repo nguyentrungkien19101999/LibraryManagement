@@ -1,4 +1,4 @@
-package com.example.ictulib.fragment_nav;
+package com.example.ictulib.adapter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -11,7 +11,6 @@ import com.example.ictulib.fragment.ReturnBookFragment;
 import com.example.ictulib.fragment_nav.HomeFragment;
 
 public class MyViewPagerAdapter extends FragmentStateAdapter {
-
 
     public MyViewPagerAdapter(@NonNull HomeFragment fragmentActivity) {
         super(fragmentActivity);
