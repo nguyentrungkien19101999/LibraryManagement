@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "998525960891",
+    "firebase_url": "https://ictulib-1d9a5-default-rtdb.firebaseio.com",
+    "project_id": "ictulib-1d9a5",
+    "storage_bucket": "ictulib-1d9a5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:998525960891:android:67691aa5e2a6b319529f9e",
+        "android_client_info": {
+          "package_name": "com.example.ictulib"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "998525960891-bp49tpfv188pe769hqpbmv9n2u85h2l1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ictulib",
+            "certificate_hash": "7c33a06c4d9bee1e2b4b8d1a802be44d16505c36"
+          }
+        },
+        {
+          "client_id": "998525960891-vjo080jha2hltfht3icllcgjdvo044nr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDeff9J3h6B3QABlayll3k59pnMGwmGaWI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "998525960891-vjo080jha2hltfht3icllcgjdvo044nr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">ICTULib</string>
+
+    <string name="nav_home">Home</string>
+    <string name="nav_logout">LogOut</string>
+    <string name="nav_statistical">Thống Kê</string>
+    <string name="nav_account">Account</string>
+    <string name="nav_about">Thông Tin Ứng Dụng</string>
+
+    <string name="tab_borrow">Mượn Sách</string>
+    <string name="tab_returnbook">Trả Sách</string>
+    <string name="tab_history">Lịch Sử</string>
+    <string name="tab_storage">Kho Sách</string>
+
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+</resources>

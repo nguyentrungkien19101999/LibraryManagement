@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/tv1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sửa tên"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/tv2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tên mới:"
+        android:layout_below="@+id/tv1"
+        android:layout_marginTop="20dp"
+        android:textSize="15sp"/>
+    <EditText
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/edt_kesach"
+        android:layout_marginStart="10dp"
+        android:layout_toRightOf="@+id/tv2"
+        android:layout_below="@+id/tv1"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_huy"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:backgroundTint="@color/white"
+        android:textColor="#B3B3B3"
+        android:layout_below="@+id/edt_kesach"
+        android:text="Hủy"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_them"
+        android:layout_toRightOf="@+id/btn_huy"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="15dp"
+        android:backgroundTint="@color/white"
+        android:textColor="#00BCD4"
+        android:layout_below="@+id/edt_kesach"
+        android:text="Đồng ý"
+        />
+
+</RelativeLayout>
