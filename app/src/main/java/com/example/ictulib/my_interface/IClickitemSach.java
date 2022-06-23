@@ -1,7 +1,7 @@
 package com.example.ictulib.my_interface;
 
-import com.example.ictulib.model.Sach;
+import com.example.ictulib.model.Book;
 
 public interface IClickitemSach {
-    void onClickItemSach(Sach sach);
+    void onClickItemSach(Book sach);
 }

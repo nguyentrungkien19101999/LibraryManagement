@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,50 +26,61 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.ictulib.BookHelper;
+import com.example.ictulib.MyApplication;
+import com.example.ictulib.constant.GlobalFuntion;
 import com.example.ictulib.view.ListBookActivity;
 import com.example.ictulib.R;
 import com.example.ictulib.adapter.Adapter_Storage;
 import com.example.ictulib.model.Storage;
 import com.example.ictulib.my_interface.IClickitemKeSach;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class BookstoreFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
-    BookHelper bookHelper;
-    ArrayList<Storage> mangStorage;
+public class BookstoreFragment extends Fragment {
 
+    private List<Storage> mListStorage;
     private FloatingActionButton btnFloating;
     private RecyclerView rcvStorage;
     private Adapter_Storage mAdapterStorage;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private View mView;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_bookstore,container, false);
+        mView = inflater.inflate(R.layout.fragment_bookstore, container, false);
 
-        rcvStorage = view.findViewById(R.id.rcv_kesach);
-        btnFloating = view.findViewById(R.id.fab);
-        swipeRefreshLayout = view.findViewById(R.id.srllayout);
+        initView();
+        select();
 
+        return mView;
+    }
 
-        swipeRefreshLayout.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue);
-        swipeRefreshLayout.setOnRefreshListener(this);
+    private void initView() {
+        if (mView == null) {
+            return;
+        }
+        rcvStorage = mView.findViewById(R.id.rcv_kesach);
+        btnFloating = mView.findViewById(R.id.fab);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 3);
         rcvStorage.setLayoutManager(gridLayoutManager);
 
-        mangStorage = new ArrayList<Storage>();
+        mListStorage = new ArrayList<>();
 
-        bookHelper = new BookHelper(getActivity(), "books.db", null, 1);
-
-        mAdapterStorage = new Adapter_Storage(mangStorage, new IClickitemKeSach() {
+        mAdapterStorage = new Adapter_Storage(getActivity(), mListStorage, new IClickitemKeSach() {
             @Override
             public void onClickItemStorage(Storage storage) {
                 Intent intent = new Intent(getActivity(), ListBookActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putInt("id_kesach",storage.getId());
+                bundle.putString("id_kesach", storage.getId());
+                bundle.putString("name_kesach", storage.getName());
+                bundle.putInt("soluong_sach", storage.getSoluong());
                 intent.putExtras(bundle);
                 startActivity(intent);
                 //Toast.makeText(getActivity(), storage.getId()+"", Toast.LENGTH_SHORT).show();
@@ -76,12 +88,10 @@ public class BookstoreFragment extends Fragment implements SwipeRefreshLayout.On
 
             @Override
             public void onClicklongItemStorage(Storage storage) {
-                DialogLongClick(storage.getName(),storage.getId());
+                DialogLongClick(storage.getName(), storage.getId());
                 //Toast.makeText(getActivity(), "LongClick...", Toast.LENGTH_SHORT).show();
             }
         });
-
-        select();
 
         btnFloating.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,11 +101,11 @@ public class BookstoreFragment extends Fragment implements SwipeRefreshLayout.On
             }
         });
 
-        return view;
+        rcvStorage.setAdapter(mAdapterStorage);
     }
 
     //Dialog Click Floattingbtn
-    private void DialogKeSach(){
+    private void DialogKeSach() {
         Dialog dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_kesach);
@@ -110,13 +120,28 @@ public class BookstoreFragment extends Fragment implements SwipeRefreshLayout.On
             @Override
             public void onClick(View view) {
                 String tenKe = edtTenKe.getText().toString().trim();
-                if (TextUtils.isEmpty(tenKe)){
+                if (TextUtils.isEmpty(tenKe)) {
                     Toast.makeText(getActivity(), "Vui lòng nhập tên kệ sách!", Toast.LENGTH_SHORT).show();
-                }else {
-                    bookHelper.QueryData("INSERT INTO KeSach VALUES(null, '"+tenKe+"')");
-                    Toast.makeText(getActivity(), "Thêm kệ sách thành công", Toast.LENGTH_SHORT).show();
+                } else {
+                    long categoryId = GlobalFuntion.getId();
+                    Storage storage = new Storage();
+                    storage.setName(tenKe);
+                    storage.setId(String.valueOf(categoryId));
+
+                    MyApplication.get(getActivity()).getBookShelf().child(String.valueOf(categoryId)).setValue(storage, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                            Toast.makeText(getActivity(),
+                                    "Thêm kệ sách thành công!", Toast.LENGTH_SHORT).show();
+                            GlobalFuntion.hideSoftKeyboard(getActivity());
+                            if (error != null) {
+                                Toast.makeText(getActivity(),
+                                        "Thêm kệ sách thất bại!", Toast.LENGTH_SHORT).show();
+                                Log.d("AddBookShelf", "++++ " + error);
+                            }
+                        }
+                    });
                     dialog.dismiss();
-                    select();
                 }
             }
         });
@@ -131,7 +156,7 @@ public class BookstoreFragment extends Fragment implements SwipeRefreshLayout.On
     }
 
     //Dialog LongClick
-    private void DialogLongClick(String name, int id){
+    private void DialogLongClick(String name, String id) {
         Dialog dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_sua_xoa_ke);
@@ -151,12 +176,13 @@ public class BookstoreFragment extends Fragment implements SwipeRefreshLayout.On
                 delete.setPositiveButton("Có", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        bookHelper.QueryData("DELETE FROM KeSach WHERE MaKe =" + id);
-                        bookHelper.QueryData("DELETE FROM Sach WHERE MaKe =" + id);
-
-                        Toast.makeText(getActivity(),"Xóa dữ liệu thành công!",Toast.LENGTH_LONG).show();
+                        MyApplication.get(getActivity()).getBookShelf().child(id).removeValue(new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                Toast.makeText(getActivity(), "Xóa kệ sách thành công!", Toast.LENGTH_LONG).show();
+                            }
+                        });
                         dialog.dismiss();
-                        select();
                     }
                 });
                 delete.setNegativeButton("Không", new DialogInterface.OnClickListener() {
@@ -179,7 +205,7 @@ public class BookstoreFragment extends Fragment implements SwipeRefreshLayout.On
     }
 
     //Dialog Sua Ten Ke
-    private void DialogSuaTenKe(String name, int id){
+    private void DialogSuaTenKe(String name, String id) {
         Dialog dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_sua_ke);
@@ -198,9 +224,17 @@ public class BookstoreFragment extends Fragment implements SwipeRefreshLayout.On
                 if (TextUtils.isEmpty(tenKe)) {
                     Toast.makeText(getActivity(), "Vui lòng nhập tên kệ sách!", Toast.LENGTH_SHORT).show();
                 } else {
-                    bookHelper.QueryData("UPDATE KeSach SET TenKe = '" + tenKe + "' WHERE MaKe = " + id);
-                    Toast.makeText(getActivity(), "Sửa tên kệ sách thành công", Toast.LENGTH_SHORT).show();
-                    select();
+                    Storage storage = new Storage();
+                    storage.setName(tenKe);
+                    storage.setId(id);
+
+                    MyApplication.get(getActivity()).getBookShelf().child(id).setValue(storage, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                            Toast.makeText(getActivity(),
+                                    "Sửa thông tin kệ sách thành công!", Toast.LENGTH_LONG).show();
+                        }
+                    });
                     dialog.dismiss();
                 }
             }
@@ -216,38 +250,69 @@ public class BookstoreFragment extends Fragment implements SwipeRefreshLayout.On
     }
 
     //Select KeSach
-    private void select(){
-        mangStorage.clear();
-        Cursor cursor = bookHelper.GetData("SELECT KeSach.MaKe, KeSach.TenKe, sum(SoLuong) FROM KeSach,Sach WHERE KeSach.MaKe = Sach.MaKe GROUP by KeSach.MaKe, KeSach.TenKe");
-        Cursor cursor1 = bookHelper.GetData("select MaKe,TenKe from KeSach WHERE MaKe not in(SELECT MaKe from Sach GROUP by MaKe)");
-        while (cursor.moveToNext()) {
-            int MaKe = cursor.getInt(0);
-            String TenKe = cursor.getString(1);
-            String soluong = cursor.getString(2);
-
-            mangStorage.add(new Storage(MaKe, soluong,TenKe));
+    private void select() {
+        if (getActivity() == null) {
+            return;
         }
 
-        while (cursor1.moveToNext()) {
-            int MaKe1 = cursor1.getInt(0);
-            String TenKe1 = cursor1.getString(1);
-            int soluong1 = 0;
+        MyApplication.get(getActivity()).getBookShelf().addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Storage storage = snapshot.getValue(Storage.class);
+                if (storage == null || mListStorage == null || mAdapterStorage == null) {
+                    return;
+                }
+                mListStorage.add(0, storage);
+                mAdapterStorage.notifyDataSetChanged();
+            }
 
-            mangStorage.add(new Storage(MaKe1, String.valueOf(soluong1),TenKe1));
-        }
-        //Toast.makeText(getActivity(), mangStorage+"", Toast.LENGTH_SHORT).show();
-        mAdapterStorage.setData(mangStorage);
-        rcvStorage.setAdapter(mAdapterStorage);
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Storage storage = snapshot.getValue(Storage.class);
+                if (storage == null || mListStorage == null || mAdapterStorage == null) {
+                    return;
+                }
+                for (int i = 0; i < mListStorage.size(); i++) {
+                    if (storage.getId().equalsIgnoreCase(mListStorage.get(i).getId())) {
+                        mListStorage.set(i, storage);
+                        break;
+                    }
+                }
+                mAdapterStorage.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                Storage storage = snapshot.getValue(Storage.class);
+                if (storage == null || mListStorage == null || mAdapterStorage == null) {
+                    return;
+                }
+                for (Storage roomDelete : mListStorage) {
+                    if (storage.getId().equalsIgnoreCase(roomDelete.getId())) {
+                        mListStorage.remove(roomDelete);
+                        break;
+                    }
+                }
+                mAdapterStorage.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getActivity(), "R.string.msg_error_not_connect_to_internet", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
-    public void onRefresh() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                select();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        }, 2500);
+    public void onDestroy() {
+        super.onDestroy();
+        if (mAdapterStorage != null) {
+            mAdapterStorage.release();
+        }
     }
 }

@@ -1,29 +1,26 @@
 package com.example.ictulib.model;
 
 public class Storage {
-    private int id;
-    private String soluong;
+    private String id;
+    private int soluong;
     private String name;
 
-    public Storage(int id, String soluong, String name) {
-        this.id = id;
-        this.soluong = soluong;
-        this.name = name;
+    public Storage() {
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getSoluong() {
+    public int getSoluong() {
         return soluong;
     }
 
-    public void setSoluong(String soluong) {
+    public void setSoluong(int soluong) {
         this.soluong = soluong;
     }
 

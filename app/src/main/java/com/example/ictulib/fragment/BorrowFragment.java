@@ -2,6 +2,7 @@ package com.example.ictulib.fragment;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +18,20 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.ictulib.BookHelper;
+import com.example.ictulib.MyApplication;
 import com.example.ictulib.R;
 import com.example.ictulib.adapter.Adapter_ListSpinner_Borrow;
+import com.example.ictulib.adapter.Adapter_Storage;
+import com.example.ictulib.constant.GlobalFuntion;
+import com.example.ictulib.model.Book;
 import com.example.ictulib.model.ListBooks;
+import com.example.ictulib.model.Storage;
+import com.example.ictulib.model.TagBorrow;
+import com.example.ictulib.view.ListBookActivity;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 
 
 import java.util.ArrayList;
@@ -27,13 +39,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class BorrowFragment extends Fragment {
-    BookHelper bookHelper;
-    Adapter_ListSpinner_Borrow adapterListBook;
-
+    private Adapter_ListSpinner_Borrow adapterListBook;
     private EditText masv, nameStudent, date, count;
     private Button save;
     private Spinner spinner_MaSach;
-    private String id_sach;
+    private String id_sach, name_sach, id_Ke;
+    private int soLuong;
 
     @Nullable
     @Override
@@ -47,38 +58,60 @@ public class BorrowFragment extends Fragment {
         save = view.findViewById(R.id.btnsave);
         count = view.findViewById(R.id.count);
 
-        //create database
-        bookHelper = new BookHelper(getActivity(), "books.db", null, 1);
+        ArrayList<Book> arrayMaSach = new ArrayList<>();
+        arrayMaSach.add(new Book("-- Chọn mã sách","",0,""));
 
-        //Create table
-        bookHelper.QueryData("CREATE TABLE IF NOT EXISTS MuonSach(Id integer primary key autoincrement," +
-                " MaSV varchar(50)," +
-                " MaSach varchar(50),"+
-                " TenSV varchar(100)," +
-                " SoLuong int," +
-                " NgayMuon varchar(20)," +
-                " NgayTra varchar(20)," +
-                " CONSTRAINT k1 FOREIGN KEY (MaSach)REFERENCES Sach(MaSach))");
+        MyApplication.get(getActivity()).getBooks().addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Book book = snapshot.getValue(Book.class);
+                if (book == null || arrayMaSach == null) {
+                    return;
+                }
+                arrayMaSach.add(new Book(book.getId(), book.getName(), book.getSoluong(), ""));
+                adapterListBook.notifyDataSetChanged();
+            }
 
-        bookHelper.QueryData(" CREATE TABLE IF NOT EXISTS Sach(MaSach varchar(50) primary key," +
-                " TenSach varchar(100)," +
-                " SoLuong int,"+
-                " MaKe int," +
-                " CONSTRAINT k2 FOREIGN KEY (MaKe)REFERENCES KeSach(MaKe))");
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Book book = snapshot.getValue(Book.class);
+                if (book == null || arrayMaSach == null) {
+                    return;
+                }
+                for (int i = 0; i < arrayMaSach.size(); i++) {
+                    if (book.getId().equalsIgnoreCase(arrayMaSach.get(i).getId())) {
+                        arrayMaSach.set(i, book);
+                        break;
+                    }
+                }
+                adapterListBook.notifyDataSetChanged();
+            }
 
-        bookHelper.QueryData(" CREATE TABLE IF NOT EXISTS KeSach(MaKe integer primary key autoincrement," +
-                " TenKe varchar(100))");
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                Book book = snapshot.getValue(Book.class);
+                if (book == null || arrayMaSach == null) {
+                    return;
+                }
+                for (Book roomDelete : arrayMaSach) {
+                    if (book.getId().equalsIgnoreCase(roomDelete.getId())) {
+                        arrayMaSach.remove(roomDelete);
+                        break;
+                    }
+                }
+                adapterListBook.notifyDataSetChanged();
+            }
 
-        ArrayList<ListBooks> arrayMaSach = new ArrayList<ListBooks>();
-        arrayMaSach.add(new ListBooks("-- Chọn mã sách",""));
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
-        Cursor cursor = bookHelper.GetData("SELECT MaSach, TenSach FROM Sach");
-        while (cursor.moveToNext()){
-            String masach = cursor.getString(0);
-            String tensach = cursor.getString(1);
+            }
 
-            arrayMaSach.add(new ListBooks(masach,tensach));
-        }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         adapterListBook = new Adapter_ListSpinner_Borrow(getActivity(), R.layout.fragment_borrow, arrayMaSach);
         spinner_MaSach.setAdapter(adapterListBook);
@@ -86,11 +119,16 @@ public class BorrowFragment extends Fragment {
         spinner_MaSach.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                id_sach = adapterListBook.getItem(i).getMaSach();
-                 //Toast.makeText(getActivity(), id_sach+"", Toast.LENGTH_LONG).show();
+                id_sach = adapterListBook.getItem(i).getId();
+                soLuong = adapterListBook.getItem(i).getSoluong();
+                id_Ke = adapterListBook.getItem(i).getIDBookShelf();
+                name_sach = adapterListBook.getItem(i).getName();
+                 Toast.makeText(getActivity(), id_sach+" "+soLuong+" ++ "+id_Ke+" ++ "+name_sach+" ", Toast.LENGTH_LONG).show();
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
+
             }
         });
 
@@ -125,43 +163,61 @@ public class BorrowFragment extends Fragment {
 
         } else if (matcher.matches()) {
             try {
-                bookHelper.QueryData("INSERT INTO MuonSach VALUES (null,'" +
-                        strMaSV + "','" +
-                        id_sach + "','" +
-                        strTenSV+ "'," +
-                        count.getText().toString().trim() + ",'" +
-                        strmuon + "',null)");
-                Toast.makeText(getActivity(), "Thêm dữ liệu người mượn thành công!", Toast.LENGTH_SHORT).show();
+                TagBorrow tagBorrow = new TagBorrow();
+                long categoryId = GlobalFuntion.getId();
+                tagBorrow.setMaSV(strMaSV);
+                tagBorrow.setId(String.valueOf(categoryId));
+                tagBorrow.setTenSV(strTenSV);
+                tagBorrow.setMaSach(id_sach);
+                tagBorrow.setNgayMuon(strmuon);
+                tagBorrow.setNgayTra("null");
+                tagBorrow.setSoLuong(Integer.parseInt(count.getText().toString()));
 
-                int soluongmuon = Integer.parseInt(count.getText().toString().trim());
-                Cursor cursor = bookHelper.GetData("SELECT SoLuong FROM Sach WHERE MaSach ='"+id_sach+"'");
-                int soluong = 0;
-                while (cursor.moveToNext()){
-                    soluong = cursor.getInt(0);
+                int soLuongInput = Integer.parseInt(count.getText().toString());
+
+                if (soLuongInput > soLuong){
+                    Toast.makeText(getActivity(),
+                            "Kho chỉ còn "+ soLuong + " quyển!", Toast.LENGTH_SHORT).show();
+                } else if(soLuongInput <= soLuong){
+                    soLuong = soLuong - soLuongInput;
+                    MyApplication.get(getActivity()).getTagBorrow().child(String.valueOf(categoryId)).setValue(tagBorrow, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                            Toast.makeText(getActivity(),
+                                    "Thêm thẻ mượn thành công!", Toast.LENGTH_SHORT).show();
+                            GlobalFuntion.hideSoftKeyboard(getActivity());
+                            if (error != null) {
+                                Toast.makeText(getActivity(),
+                                        "Thêm thẻ mượn thất bại!", Toast.LENGTH_SHORT).show();
+                                Log.d("AddTagBorrow", "++++ " + error);
+                            }
+                        }
+                    });
+
+                    changeSoluong(soLuong);
+
+                    masv.setText(null);
+                    nameStudent.setText(null);
+                    date.setText(null);
+                    count.setText(null);
                 }
-
-                soluong = soluong - soluongmuon;
-                //Toast.makeText(getActivity(), soluong+"", Toast.LENGTH_LONG).show();
-                bookHelper.QueryData("UPDATE Sach SET SoLuong ="+soluong+" WHERE MaSach ='"+id_sach+"'");
-
-                masv.setText(null);
-                nameStudent.setText(null);
-                date.setText(null);
-                count.setText(null);
             }catch (Exception e){Toast.makeText(getActivity(), "Không tồn tại mã sách trong kho! Vui lòng kiểm tra lại!", Toast.LENGTH_LONG).show();}
-
         } else {
             Toast.makeText(getActivity(), "Số lượng nhập sai định dạng! Vui lòng nhập lại!", Toast.LENGTH_LONG).show();
         }
     }
+
+    private void changeSoluong(int soluong){
+        Book book = new Book();
+        book.setId(id_sach);
+        book.setName(name_sach);
+        book.setIDBookShelf(id_Ke);
+        book.setSoluong(soluong);
+        MyApplication.get(getActivity()).getBooks().child(id_sach).setValue(book, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                Log.d("UpDateSoLuong", "Update Successfull");
+            }
+        });
+    }
 }
-    /*public void hideSotfkeyboard(){
-        try {
-            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-        }catch (NullPointerException ex){
-            ex.printStackTrace();
-        }
-    }*/
-
-

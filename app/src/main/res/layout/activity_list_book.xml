@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.ListBookActivity"
-    >
+    tools:context=".view.ListBookActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar2"
@@ -16,29 +15,33 @@
         app:theme="@style/ToolbarTheme"
         app:titleTextColor="@color/white" />
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/srllayout"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcv_sach"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/toolbar2"
+        android:layout_height="match_parent" />
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/tvListEmpty"
+        android:layout_marginTop="50dp"
+        android:layout_marginStart="150dp"
+        android:text="Kệ sách trống."
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:textStyle="bold"
         android:layout_below="@+id/toolbar2"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="10dp">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rcv_sach"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        android:visibility="visible"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
         android:layout_margin="20dp"
         android:src="@drawable/ic_add"
-        app:maxImageSize="30dp"
-        />
+        app:maxImageSize="30dp" />
 
 </RelativeLayout>

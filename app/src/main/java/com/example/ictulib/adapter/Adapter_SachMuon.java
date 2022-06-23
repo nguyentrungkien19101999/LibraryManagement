@@ -10,21 +10,21 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ictulib.R;
-import com.example.ictulib.model.Books;
+import com.example.ictulib.model.TagBorrow;
 import com.example.ictulib.my_interface.IClickitemMuonSach;
 
 import java.util.List;
 
 public class Adapter_SachMuon extends RecyclerView.Adapter<Adapter_SachMuon.MuonViewHolder>{
-    private List<Books> mlistMuon;
+    private List<TagBorrow> mlistMuon;
     private IClickitemMuonSach iClickitemMuonSach;
 
-    public Adapter_SachMuon(List<Books> mlistMuon, IClickitemMuonSach iClickitemMuonSach) {
+    public Adapter_SachMuon(List<TagBorrow> mlistMuon, IClickitemMuonSach iClickitemMuonSach) {
         this.mlistMuon = mlistMuon;
         this.iClickitemMuonSach = iClickitemMuonSach;
     }
 
-    public void setData(List<Books> list){
+    public void setData(List<TagBorrow> list){
         this.mlistMuon = list;
         notifyDataSetChanged();
     }
@@ -38,13 +38,13 @@ public class Adapter_SachMuon extends RecyclerView.Adapter<Adapter_SachMuon.Muon
 
     @Override
     public void onBindViewHolder(@NonNull MuonViewHolder holder, int position) {
-        Books books = mlistMuon.get(position);
+        TagBorrow books = mlistMuon.get(position);
         if (books == null){
             return;
         }
         holder.maSV.setText(books.getMaSV());
         holder.maSach.setText(books.getMaSach());
-        holder.tenSV.setText(books.getNamestudent());
+        holder.tenSV.setText(books.getTenSV());
         holder.soLuong.setText(books.getSoLuong());
 
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {

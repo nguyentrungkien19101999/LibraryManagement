@@ -32,14 +32,14 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.ictulib.BookHelper;
 import com.example.ictulib.R;
 import com.example.ictulib.adapter.Adapter_SachMuon;
-import com.example.ictulib.model.Books;
+import com.example.ictulib.model.TagBorrow;
 import com.example.ictulib.my_interface.IClickitemMuonSach;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
 public class ReturnBookFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
-    ArrayList<Books> mangMuonSach;
+    ArrayList<TagBorrow> mangMuonSach;
     BookHelper bookHelper;
 
     private Adapter_SachMuon adapterBook;
@@ -72,14 +72,14 @@ public class ReturnBookFragment extends Fragment implements SwipeRefreshLayout.O
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(),RecyclerView.VERTICAL, false);
         rcvMuonSach.setLayoutManager(linearLayoutManager);
 
-        mangMuonSach = new ArrayList<Books>();
+        mangMuonSach = new ArrayList<TagBorrow>();
 
         //create database
         bookHelper = new BookHelper(getActivity(), "books.db", null, 1);
 
         adapterBook = new Adapter_SachMuon(mangMuonSach, new IClickitemMuonSach() {
             @Override
-            public void onClickItemMuonSach(Books books) {
+            public void onClickItemMuonSach(TagBorrow books) {
                 DialogUpdateInfor(Gravity.CENTER, books.getId());
             }
         });
@@ -152,7 +152,7 @@ public class ReturnBookFragment extends Fragment implements SwipeRefreshLayout.O
             String TenSV = cursor.getString(3);
             String SoLuong = cursor.getString(4);
 
-            mangMuonSach.add(new Books(id,MaSV, TenSV, MaSach, SoLuong));
+//            mangMuonSach.add(new TagBorrow(id,MaSV, TenSV, MaSach, SoLuong));
         }
         if(mangMuonSach.size() ==0){
             Toast.makeText(getActivity(), "Chưa có sách mượn", Toast.LENGTH_LONG).show();
@@ -189,7 +189,7 @@ public class ReturnBookFragment extends Fragment implements SwipeRefreshLayout.O
                         String TenSV = cursor.getString(3);
                         String SoLuong = cursor.getString(4);
 
-                        mangMuonSach.add(new Books(id,MaSV, TenSV, MaSach, SoLuong));
+//                        mangMuonSach.add(new TagBorrow(id,MaSV, TenSV, MaSach, SoLuong));
                     }
 
                     if (mangMuonSach.size() == 0){
@@ -213,7 +213,7 @@ public class ReturnBookFragment extends Fragment implements SwipeRefreshLayout.O
         dialog.show();
     }
 
-    private void DialogUpdateInfor(int gravity, int id){
+    private void DialogUpdateInfor(int gravity, String id){
         Dialog dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_update_infor);
@@ -298,7 +298,7 @@ public class ReturnBookFragment extends Fragment implements SwipeRefreshLayout.O
         dialog.show();
     }
 
-    private void upDateData(int id) {
+    private void upDateData(String id) {
         String strMaSV = editText_MaSV.getText().toString().trim();
         String strTenSV = editText_TenSV.getText().toString().trim();
         String strMaSach = editText_MaSach.getText().toString().trim();
@@ -486,7 +486,7 @@ public class ReturnBookFragment extends Fragment implements SwipeRefreshLayout.O
             String TenSV = cursor.getString(3);
             String SoLuong = cursor.getString(4);
 
-            mangMuonSach.add(new Books(id,MaSV, TenSV, MaSach, SoLuong));
+//            mangMuonSach.add(new TagBorrow(id,MaSV, TenSV, MaSach, SoLuong));
         }
         if(mangMuonSach.size() ==0){
             Toast.makeText(getActivity(), "Chưa có sách mượn quá hạn", Toast.LENGTH_LONG).show();

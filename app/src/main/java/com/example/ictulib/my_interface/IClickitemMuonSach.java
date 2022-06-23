@@ -1,7 +1,7 @@
 package com.example.ictulib.my_interface;
 
-import com.example.ictulib.model.Books;
+import com.example.ictulib.model.TagBorrow;
 
 public interface IClickitemMuonSach {
-    void onClickItemMuonSach(Books books);
+    void onClickItemMuonSach(TagBorrow books);
 }

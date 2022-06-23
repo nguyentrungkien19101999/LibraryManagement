@@ -1,27 +1,27 @@
 package com.example.ictulib.model;
 
 public class ListBooks {
-    private String maSach;
-    private String tenSach;
+    private String id;
+    private String name;
 
-    public ListBooks(String maSach, String tenSach) {
-        this.maSach = maSach;
-        this.tenSach = tenSach;
+    public ListBooks(String id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
-    public String getMaSach() {
-        return maSach;
+    public String getId() {
+        return id;
     }
 
-    public void setMaSach(String maSach) {
-        this.maSach = maSach;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getTenSach() {
-        return tenSach;
+    public String getName() {
+        return name;
     }
 
-    public void setTenSach(String tenSach) {
-        this.tenSach = tenSach;
+    public void setName(String name) {
+        this.name = name;
     }
 }

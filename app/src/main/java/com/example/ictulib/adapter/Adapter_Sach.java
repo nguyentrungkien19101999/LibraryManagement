@@ -1,6 +1,7 @@
 package com.example.ictulib.adapter;
 
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,24 +12,21 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ictulib.R;
-import com.example.ictulib.model.Sach;
+import com.example.ictulib.model.Book;
 import com.example.ictulib.my_interface.IClickitemSach;
 
 import java.util.List;
 
 
 public class Adapter_Sach extends RecyclerView.Adapter<Adapter_Sach.SachViewHolder>{
-    private List<Sach> mListSach;
+    private Context mContext;
+    private List<Book> mListSach;
     private IClickitemSach iClickitemSach;
 
-    public Adapter_Sach(List<Sach> mListSach, IClickitemSach iClickitemSach) {
+    public Adapter_Sach(Context mContext, List<Book> mListSach, IClickitemSach iClickitemSach) {
+        this.mContext = mContext;
         this.mListSach = mListSach;
         this.iClickitemSach = iClickitemSach;
-    }
-
-    public void setData(List<Sach> list){
-        this.mListSach = list;
-        notifyDataSetChanged();
     }
 
     @NonNull
@@ -40,13 +38,13 @@ public class Adapter_Sach extends RecyclerView.Adapter<Adapter_Sach.SachViewHold
 
     @Override
     public void onBindViewHolder(@NonNull SachViewHolder holder, int position) {
-        Sach sach = mListSach.get(position);
+        Book sach = mListSach.get(position);
         if (sach == null){
             return;
         }
         holder.tvId.setText(sach.getId());
         holder.tvName.setText(sach.getName());
-        holder.tvSoluong.setText(sach.getSoluong());
+        holder.tvSoluong.setText(String.valueOf(sach.getSoluong()));
 
         holder.layoutItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,7 +63,6 @@ public class Adapter_Sach extends RecyclerView.Adapter<Adapter_Sach.SachViewHold
     }
 
     public class SachViewHolder extends RecyclerView.ViewHolder{
-
         private TextView tvName;
         private TextView tvId;
         private TextView tvSoluong;
@@ -80,5 +77,4 @@ public class Adapter_Sach extends RecyclerView.Adapter<Adapter_Sach.SachViewHold
             layoutItem = itemView.findViewById(R.id.linear);
         }
     }
-
 }

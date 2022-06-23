@@ -1,18 +1,18 @@
 package com.example.ictulib.view;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -22,24 +22,29 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ictulib.BookHelper;
+import com.example.ictulib.MyApplication;
 import com.example.ictulib.R;
 import com.example.ictulib.adapter.Adapter_Sach;
-import com.example.ictulib.model.Sach;
+import com.example.ictulib.model.Book;
+import com.example.ictulib.model.Storage;
 import com.example.ictulib.my_interface.IClickitemSach;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class ListBookActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
-    BookHelper bookHelper;
-    ArrayList<Sach> mangSach;
-    private int id_Ke;
-
+public class ListBookActivity extends AppCompatActivity {
+    private List<Book> mListBook;
+    private String id_Ke, name_Ke;
+    private int soluong_sach;
     private RecyclerView rcvSach;
-    private Adapter_Sach madapterSach;
+    private Adapter_Sach mBookAdapter;
     private FloatingActionButton btnFloating;
-    private SwipeRefreshLayout swipeRefreshLayout;
-
+    private TextView tvEmptyList;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -60,15 +65,13 @@ public class ListBookActivity extends AppCompatActivity implements SwipeRefreshL
         setContentView(R.layout.activity_list_book);
         rcvSach = findViewById(R.id.rcv_sach);
         btnFloating = findViewById(R.id.fab2);
-        swipeRefreshLayout = findViewById(R.id.srllayout);
+        tvEmptyList = findViewById(R.id.tvListEmpty);
 
-        swipeRefreshLayout.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue);
-        swipeRefreshLayout.setOnRefreshListener(this);
+        mListBook = new ArrayList<>();
 
-        bookHelper = new BookHelper(this, "books.db", null, 1);
-        madapterSach = new Adapter_Sach(mangSach, new IClickitemSach() {
+        mBookAdapter = new Adapter_Sach(getApplication(), mListBook, new IClickitemSach() {
             @Override
-            public void onClickItemSach(Sach sach) {
+            public void onClickItemSach(Book sach) {
                 DialogSuaXoa(sach.getId(), sach.getName(), sach.getSoluong());
                 //Toast.makeText(getApplication(), "Click item Sach...", Toast.LENGTH_SHORT).show();
             }
@@ -79,42 +82,37 @@ public class ListBookActivity extends AppCompatActivity implements SwipeRefreshL
             return;
         }
 
-        id_Ke = (int) bundle.get("id_kesach");
-
-        Cursor cursor1 = bookHelper.GetData("SELECT TenKe FROM KeSach WHERE MaKe =" + id_Ke);
-        String TenKe = null;
-
-        while (cursor1.moveToNext()) {
-            TenKe = cursor1.getString(0);
-        }
+        id_Ke = (String) bundle.get("id_kesach");
+        name_Ke = (String) bundle.get("name_kesach");
+        soluong_sach = (int) bundle.get("soluong_sach");
 
         Toolbar toolbar = findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setTitle(String.valueOf(TenKe));
+        getSupportActionBar().setTitle(String.valueOf(name_Ke));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rcvSach.setLayoutManager(linearLayoutManager);
 
-        mangSach = new ArrayList<Sach>();
-
-        kiemTraRong(id_Ke);
-        select(id_Ke);
+        kiemTraRong();
+        select();
 
         //Click btnFloating
         btnFloating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Dialog(id_Ke);
+                Dialog();
                 //Toast.makeText(getApplication(), id+"", Toast.LENGTH_SHORT).show();
             }
         });
+
+        rcvSach.setAdapter(mBookAdapter);
     }
 
     //Dialog Them Sach
-    private void Dialog(int id) {
+    private void Dialog() {
         Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_themsach);
@@ -132,19 +130,38 @@ public class ListBookActivity extends AppCompatActivity implements SwipeRefreshL
             public void onClick(View view) {
                 String maSach = edtMaSach.getText().toString().trim();
                 String tenSach = edtTenSach.getText().toString().trim();
-                String soLuong = edtSoLuong.getText().toString().trim();
+                int soLuong = Integer.parseInt(edtSoLuong.getText().toString().trim());
 
                 if (TextUtils.isEmpty(maSach)) {
                     Toast.makeText(getApplication(), "Vui lòng nhập mã sách!", Toast.LENGTH_SHORT).show();
                 } else if (TextUtils.isEmpty(tenSach)) {
                     Toast.makeText(getApplication(), "Vui lòng nhập tên sách!", Toast.LENGTH_SHORT).show();
-                } else if (TextUtils.isEmpty(soLuong)) {
+                } else if (TextUtils.isEmpty(edtSoLuong.getText().toString().trim())) {
                     Toast.makeText(getApplication(), "Vui lòng nhập số lượng sách!", Toast.LENGTH_SHORT).show();
                 } else {
                     try {
-                        bookHelper.QueryData("INSERT INTO Sach VALUES('" + maSach + "','" + tenSach + "'," + soLuong + "," + id + ")");
-                        Toast.makeText(getApplication(), "Thêm sách thành công", Toast.LENGTH_SHORT).show();
-                        select(id);
+                        Book book = new Book();
+                        book.setId(maSach);
+                        book.setName(tenSach);
+                        book.setSoluong(soLuong);
+                        book.setIDBookShelf(id_Ke);
+
+                        MyApplication.get(getApplication()).getBooks().child(maSach).setValue(book, new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                soluong_sach = soluong_sach + soLuong;
+                                Toast.makeText(getApplication(),
+                                        "Thêm sách thành công!", Toast.LENGTH_SHORT).show();
+                                if (error != null) {
+                                    Toast.makeText(getApplication(),
+                                            "Thêm sách thất bại!", Toast.LENGTH_SHORT).show();
+                                    Log.d("AddBook", "++++ " + error);
+                                }
+                            }
+                        });
+
+                        int soluong = soluong_sach + soLuong;
+                        changeSoluong(soluong);
 
                         dialog.dismiss();
                     } catch (Exception e) {
@@ -164,44 +181,82 @@ public class ListBookActivity extends AppCompatActivity implements SwipeRefreshL
     }
 
     //Select Sach
-    private void select(int id) {
-        mangSach.clear();
-        Cursor cursor = bookHelper.GetData("SELECT MaSach, TenSach, SoLuong FROM Sach WHERE MaKe =" + id);
-        while (cursor.moveToNext()) {
-            String MaSach = cursor.getString(0);
-            String TenSach = cursor.getString(1);
-            String SoLuong = cursor.getString(2);
-
-            mangSach.add(new Sach(MaSach, TenSach, SoLuong));
+    private void select() {
+        if (getApplication() == null) {
+            return;
         }
-        //Toast.makeText(this, mangSach+"", Toast.LENGTH_SHORT).show();
-        madapterSach.setData(mangSach);
-        rcvSach.setAdapter(madapterSach);
+
+        MyApplication.get(getApplication()).getBooks().orderByChild("idbookShelf").equalTo(id_Ke).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Book book = snapshot.getValue(Book.class);
+                if (book == null || mListBook == null || mBookAdapter == null) {
+                    return;
+                }
+                mListBook.add(0, book);
+                mBookAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Book book = snapshot.getValue(Book.class);
+                if (book == null || mListBook == null || mBookAdapter == null) {
+                    return;
+                }
+                for (int i = 0; i < mListBook.size(); i++) {
+                    if (book.getId().equalsIgnoreCase(mListBook.get(i).getId())) {
+                        mListBook.set(i, book);
+                        break;
+                    }
+                }
+                mBookAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                Book book = snapshot.getValue(Book.class);
+                if (book == null || mListBook == null || mBookAdapter == null) {
+                    return;
+                }
+                for (Book roomDelete : mListBook) {
+                    if (book.getId().equalsIgnoreCase(roomDelete.getId())) {
+                        mListBook.remove(roomDelete);
+                        break;
+                    }
+                }
+                mBookAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplication(), "R.string.msg_error_not_connect_to_internet", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     //Kiem tra KeSach Rỗng
-    private void kiemTraRong(int id) {
-        String TenKe2 = null;
-        Cursor cursor2 = bookHelper.GetData("SELECT MaKe FROM Sach WHERE MaKe =" + id);
-        while (cursor2.moveToNext()) {
-            TenKe2 = cursor2.getString(0);
-        }
-        if (TenKe2 == null) {
-            Toast.makeText(this, "Kệ sách trống.\nChọn dấu + bên cạnh để thêm sách vào kệ.", Toast.LENGTH_LONG).show();
+    private void kiemTraRong() {
+        if (getApplication() != null){
+            tvEmptyList.setVisibility(View.GONE);
         }
     }
 
     //Dialog Sửa, xóa sách
-    private void DialogSuaXoa(String masach, String name, String soluong) {
+    private void DialogSuaXoa(String idBook, String name, int soluong) {
         Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_sua_xoa_sach);
 
-        TextView tvNameKe = dialog.findViewById(R.id.tv_namesach);
+        TextView tvNameBook = dialog.findViewById(R.id.tv_namesach);
         Button btnXoa = dialog.findViewById(R.id.btn_xoa);
         Button btnSua = dialog.findViewById(R.id.btn_sua);
 
-        tvNameKe.setText(name);
+        tvNameBook.setText(name);
 
         btnXoa.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -212,11 +267,16 @@ public class ListBookActivity extends AppCompatActivity implements SwipeRefreshL
                 delete.setPositiveButton("Có", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        bookHelper.QueryData("DELETE FROM Sach WHERE MaSach ='" + masach + "'");
+                        MyApplication.get(getApplication()).getBooks().child(idBook).removeValue(new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                Toast.makeText(getApplication(), "Xóa sách thành công!", Toast.LENGTH_LONG).show();
 
-                        Toast.makeText(getApplication(), "Xóa dữ liệu thành công!", Toast.LENGTH_LONG).show();
+                                soluong_sach = soluong_sach - soluong;
+                                changeSoluong(soluong_sach);
+                            }
+                        });
                         dialog.dismiss();
-                        select(id_Ke);
                     }
                 });
                 delete.setNegativeButton("Không", new DialogInterface.OnClickListener() {
@@ -231,14 +291,14 @@ public class ListBookActivity extends AppCompatActivity implements SwipeRefreshL
         btnSua.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogSuaSach(masach, name, soluong);
+                DialogSuaSach(idBook, name, soluong);
                 dialog.dismiss();
             }
         });
         dialog.show();
     }
 
-    private void DialogSuaSach(String masach, String tensach, String soluong) {
+    private void DialogSuaSach(String idBook, String tensach, int soluong) {
         Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_sua_sach);
@@ -251,28 +311,44 @@ public class ListBookActivity extends AppCompatActivity implements SwipeRefreshL
         Button btnHuy = dialog.findViewById(R.id.btn_huy);
         Button btnThem = dialog.findViewById(R.id.btn_them);
 
-        edt_masach.setText(masach);
+        edt_masach.setText(idBook);
         edt_tensach.setText(tensach);
-        edt_soluong.setText(soluong);
+        edt_soluong.setText(String.valueOf(soluong));
 
         btnThem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String masach1 = edt_masach.getText().toString().trim();
                 String tensach1 = edt_tensach.getText().toString().trim();
-                String soluong1 = edt_soluong.getText().toString().trim();
+                int soluong1 = Integer.parseInt(edt_soluong.getText().toString().trim());
 
-                if (TextUtils.isEmpty(masach1)) {
-                    Toast.makeText(getApplication(), "Vui lòng nhập mã sách!", Toast.LENGTH_SHORT).show();
-                } else if (TextUtils.isEmpty(tensach1)) {
+                if (TextUtils.isEmpty(tensach1)) {
                     Toast.makeText(getApplication(), "Vui lòng nhập tên sách!", Toast.LENGTH_SHORT).show();
-                } else if (TextUtils.isEmpty(soluong1)) {
+                } else if (TextUtils.isEmpty(edt_soluong.getText().toString().trim())) {
                     Toast.makeText(getApplication(), "Vui lòng nhập số lượng sách!", Toast.LENGTH_SHORT).show();
                 } else {
                     try {
-                        bookHelper.QueryData("UPDATE Sach SET MaSach = '" + masach1 + "',TenSach = '" + tensach1 + "',SoLuong = " + soluong1 + ", MaKe = " + id_Ke + " WHERE MaSach = '" + masach + "'");
-                        Toast.makeText(getApplication(), "Sửa thông tin sách thành công", Toast.LENGTH_SHORT).show();
-                        select(id_Ke);
+                        Book book = new Book();
+                        book.setId(idBook);
+                        book.setName(tensach1);
+                        book.setSoluong(soluong1);
+                        book.setIDBookShelf(id_Ke);
+
+                        MyApplication.get(getApplication()).getBooks().child(idBook).setValue(book, new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                Toast.makeText(getApplication(),
+                                        "Sửa thông tin kệ sách thành công!", Toast.LENGTH_LONG).show();
+                            }
+                        });
+
+                        if (soluong1 > soluong){
+                            soluong_sach = soluong_sach + (soluong1 - soluong);
+                            changeSoluong(soluong_sach);
+                        } else if (soluong1 < soluong){
+                            soluong_sach = soluong_sach - (soluong - soluong1);
+                            changeSoluong(soluong_sach);
+                        }
+
                         dialog.dismiss();
                     } catch (Exception e) {
                         Toast.makeText(getApplication(), "Sách đã tồn tại hoặc số lượng nhập sai định dạng! Vui lòng thử lại!", Toast.LENGTH_LONG).show();
@@ -290,14 +366,16 @@ public class ListBookActivity extends AppCompatActivity implements SwipeRefreshL
         dialog.show();
     }
 
-    @Override
-    public void onRefresh() {
-        new Handler().postDelayed(new Runnable() {
+    public void changeSoluong(int soluong){
+        Storage storage = new Storage();
+        storage.setId(id_Ke);
+        storage.setName(name_Ke);
+        storage.setSoluong(soluong);
+        MyApplication.get(getApplication()).getBookShelf().child(id_Ke).setValue(storage, new DatabaseReference.CompletionListener() {
             @Override
-            public void run() {
-                select(id_Ke);
-                swipeRefreshLayout.setRefreshing(false);
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                Log.d("UpDateSoLuong", "Update Successfull");
             }
-        }, 2500);
+        });
     }
 }

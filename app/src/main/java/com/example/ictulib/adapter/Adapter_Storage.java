@@ -1,5 +1,6 @@
 package com.example.ictulib.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,18 +18,20 @@ import java.util.List;
 
 public class Adapter_Storage extends RecyclerView.Adapter<Adapter_Storage.StorageViewHolder>{
 
-
+    private Context mContext;
     private List<Storage> mListStorage;
     private IClickitemKeSach iClickitemKeSach;
 
-    public Adapter_Storage(List<Storage> mListStorage, IClickitemKeSach listener) {
+    public Adapter_Storage(Context mContext, List<Storage> mListStorage, IClickitemKeSach listener) {
         this.mListStorage = mListStorage;
         this.iClickitemKeSach = listener;
+        this.mContext = mContext;
     }
 
-    public void setData(List<Storage> list){
-        this.mListStorage = list;
-        notifyDataSetChanged();
+    public void release() {
+        if (mContext != null) {
+            mContext = null;
+        }
     }
 
     @NonNull
@@ -40,7 +43,7 @@ public class Adapter_Storage extends RecyclerView.Adapter<Adapter_Storage.Storag
 
     @Override
     public void onBindViewHolder(@NonNull StorageViewHolder holder, int position) {
-        final Storage storage = mListStorage.get(position);
+        Storage storage = mListStorage.get(position);
         if (storage == null){
             return;
         }
@@ -62,7 +65,6 @@ public class Adapter_Storage extends RecyclerView.Adapter<Adapter_Storage.Storag
                 return false;
             }
         });
-
     }
 
     @Override
@@ -73,7 +75,7 @@ public class Adapter_Storage extends RecyclerView.Adapter<Adapter_Storage.Storag
         return 0;
     }
 
-    public class StorageViewHolder extends RecyclerView.ViewHolder{
+    public static class StorageViewHolder extends RecyclerView.ViewHolder{
 
         private TextView tv_soluong;
         private TextView tvName;
@@ -87,5 +89,4 @@ public class Adapter_Storage extends RecyclerView.Adapter<Adapter_Storage.Storag
             layoutItem = itemView.findViewById(R.id.linear);
         }
     }
-
 }

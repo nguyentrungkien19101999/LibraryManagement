@@ -11,13 +11,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.ictulib.R;
+import com.example.ictulib.model.Book;
 import com.example.ictulib.model.ListBooks;
 
 import java.util.List;
 
-public class Adapter_ListSpinner_Borrow extends ArrayAdapter<ListBooks> {
+public class Adapter_ListSpinner_Borrow extends ArrayAdapter<Book> {
 
-    public Adapter_ListSpinner_Borrow(@NonNull Context context, int resource, @NonNull List<ListBooks> objects) {
+    public Adapter_ListSpinner_Borrow(@NonNull Context context, int resource, @NonNull List<Book> objects) {
         super(context, resource, objects);
     }
 
@@ -28,9 +29,9 @@ public class Adapter_ListSpinner_Borrow extends ArrayAdapter<ListBooks> {
         convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_selected, parent,false);
         TextView tv_selected = convertView.findViewById(R.id.tv_selected);
 
-        ListBooks listBooks = this.getItem(position);
+        Book listBooks = this.getItem(position);
         if (listBooks != null){
-            tv_selected.setText(listBooks.getMaSach()+" -- "+listBooks.getTenSach());
+            tv_selected.setText(listBooks.getId()+" -- "+listBooks.getName());
         }
 
         return convertView;
@@ -41,9 +42,9 @@ public class Adapter_ListSpinner_Borrow extends ArrayAdapter<ListBooks> {
         convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_listbook, parent,false);
         TextView textView = convertView.findViewById(R.id.tv_category);
 
-        ListBooks listBooks = this.getItem(position);
+        Book listBooks = this.getItem(position);
         if (listBooks != null){
-            textView.setText(listBooks.getMaSach()+" -- "+listBooks.getTenSach());
+            textView.setText(listBooks.getId()+" -- "+listBooks.getName());
         }
 
         return convertView;

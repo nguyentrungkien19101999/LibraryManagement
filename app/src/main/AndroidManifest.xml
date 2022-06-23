@@ -10,17 +10,20 @@
         android:label="Thư Viện ICTU"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:name=".MyApplication"
         android:theme="@style/Theme.ICTULib">
         <activity android:name=".view.LoginActivity"
+            >
+        </activity>
+        <activity android:name=".view.ListBookActivity" />
+        <activity android:name=".view.ForgotPasswordActivity" />
+        <activity android:name=".view.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.ListBookActivity" />
-        <activity android:name=".view.ForgotPasswordActivity" />
-        <activity android:name=".view.MainActivity"/>
     </application>
 
 </manifest>
